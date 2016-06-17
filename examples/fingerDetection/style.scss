@@ -1,0 +1,147 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300);
+
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  box-sizing: border-box;
+}
+
+$blue : #22475E;
+$yellow : #4C4A30;
+$red : #421D26;
+$radius : 5px;
+
+@keyframes bg {
+  from, to { background: $blue; }
+  33% { background: $yellow; }
+  66% { background: $red; }
+}
+
+menu {  
+  label {
+    display: inline-block;
+    font-size: 1.3rem;
+    padding: .5rem 1rem;
+    background: rgba(ivory, .3);
+    cursor: pointer;
+    transition: .5s;
+    
+    &:first-of-type { border-radius: $radius 0 0 $radius; }
+    &:last-of-type { border-radius: 0 $radius $radius 0; }
+  }
+  
+  input { 
+    display: none;
+    
+    &:checked + label {
+      background: rgba(ivory, .9);
+      transition: 0;
+    }
+  }
+  
+  margin-bottom: 4rem;
+}
+
+.keyboard {
+  width: 40rem;
+  position: relative;
+}
+
+.key {
+  display: inline-block;
+  position: relative;
+  width: 11.111%;
+  padding-bottom: 35%;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.3);
+  background: ivory;
+  vertical-align: top;
+  cursor: pointer;
+  border-radius: $radius;
+  transition: 1s;
+  color: rgba(255,255,255, .3);
+  
+  &:after {
+    display: block;
+    font-family: "Open Sans Condensed";
+    font-size: 1.5rem;
+    line-height: 2;
+    text-align: center;
+    content: attr(data-note);
+    
+    .keybind & { content: attr(data-bind); }
+    
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+  }
+  
+  &:hover {
+    background: shade(ivory, 10%);
+    transition: .2s;
+  }
+  
+  
+  &.active {
+    animation: blacks 300ms;
+  }
+  
+  &:focus { outline: 0; }
+  
+  &:first-child,
+  &:last-child {
+    opacity: 0;
+    
+    &.active {
+      animation: secrets 300ms;
+    }
+  }
+}
+
+
+
+[data-note*="#"] {
+  position: absolute;
+  z-index: 100;
+  width: 12.5%;
+  background: #111;
+  transform-origin: center top;
+  transform: translateX(-50%) scale(.6);
+  border-radius: 0 0 $radius*1.6 $radius*1.6;
+  
+  &:after {
+    font-size: 2.5rem;
+    top: inherit;
+    bottom: 100%;
+  }
+  
+  &:hover {
+    background: tint(black, 20%);
+  }
+  
+  &.active {
+    animation: blacks 300ms;
+  }
+}
+
+@keyframes secrets {
+  from {
+    opacity: .2;
+    background: tint(black, 35%);
+  }
+}
+@keyframes whites {
+  from { 
+    background: tint(black, 35%);
+    color: ivory;
+    text-shadow: 0 0 1rem, 0 0 2rem, 0 0 3rem;
+  }
+}
+@keyframes blacks {
+   from {
+    background: tint(black, 35%);
+    color: ivory;
+    text-shadow: 0 0 1rem, 0 0 2rem, 0 0 3rem;  
+  }
+}
