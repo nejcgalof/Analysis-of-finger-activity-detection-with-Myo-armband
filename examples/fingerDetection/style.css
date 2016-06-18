@@ -53,6 +53,14 @@ body{
     cursor:pointer;
 }
 
+#piano_button{
+    border:solid 1px;
+    width: 25px;
+    height: 25px;
+    float:right;
+    cursor:pointer;
+}
+
 #title_bar{
     height: 30px;
     width: 100%;
@@ -66,3 +74,18 @@ body{
 	padding : 45;
 }
 
+#piano_box{
+	padding : 45;
+}
+
+.fingers{
+	padding : 20;
+}
+
+.emgGraphs{
+	padding : 20;
+}
+
+.piano{
+	padding : 20;
+}

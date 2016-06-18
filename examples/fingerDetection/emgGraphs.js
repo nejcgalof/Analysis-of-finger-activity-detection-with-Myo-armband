@@ -1,18 +1,8 @@
 // AUTHOR: NEJC GALOF; galof.nejc@gmail.com
 //This tells Myo.js to create the web sockets needed to communnicate with Myo Connect
 
-//create sound buffers for notes:
-var snd_a = new Audio("piano_a.wav");
-var snd_b = new Audio("piano_b.wav");
-var snd_c = new Audio("piano_c.wav"); 
-var snd_d = new Audio("piano_d.wav");
-var snd_e = new Audio("piano_e.wav");
-var snd_f = new Audio("piano_f.wav");
-var snd_g = new Audio("piano_g.wav");
-
-
 //sample for moving
-var moving=203;
+var moving=0;
 var orientation=0;
 
 Myo.on('connected', function(){
@@ -32,16 +22,17 @@ Myo.on('battery_level', function(val){
 });
 
 Myo.on('gyroscope', function(data) {  
-    console.log(data.x);
-    if(data.x>5 || data.x<-5){
+    //console.log(data.x);
+    if(data.x>15 || data.x<-15){
     		moving=moving-(data.x);
     }
-    if(moving>406){
-    	moving=406;
+    if(moving>9000){
+    	moving=100;
     }
-    else if(moving<0){
-    	moving=0;
+    else if(moving<-9000){
+    	moving=-100;
     }
+    console.log(moving);
 });
 
 Myo.on('orientation', function(data) {  
@@ -49,7 +40,7 @@ Myo.on('orientation', function(data) {
 });
 
 //Drawing functions
-function draw_square(position) {
+/*function draw_square(position) {
 	var canvas = document.getElementById('piano_canvas');
   	var context = canvas.getContext('2d');
   	context.clearRect(0, 0, canvas.width, canvas.height);//delete square
@@ -58,7 +49,7 @@ function draw_square(position) {
   	context.fillStyle = 'red';
   	context.fill();
   	context.stroke();
-}
+}*/
 
 var rawData = [0,0,0,0,0,0,0,0];
 Myo.on('emg', function(data){
@@ -123,6 +114,18 @@ $(document).ready(function(){
     	}
     	$("#finger_box").slideToggle();
 	});
+
+	//Minimalize piano
+	$("#piano_button").click(function(){
+		console.log("piano_button!!!!!!!!!");
+    	if($(this).html() == "-"){
+        	$(this).html("+");
+    	}
+    	else{
+        	$(this).html("-");
+    	}
+    	$("#piano_box").slideToggle();
+	});
 });
 
 var formatFlotData = function(data){
@@ -143,6 +146,10 @@ var sum3=0;
 var sum4=0;
 var sum6=0;
 var sum7=0;
+
+//piano moving
+var posit=6;
+var mov=0;
 var updateGraph = function(emgData){
 	graphData.map(function(data, index){
 		graphData[index] = graphData[index].slice(1);
@@ -207,7 +214,7 @@ var updateGraph = function(emgData){
 			//console.log("3: " +filter3/st);
 			if(filter3/st>500){
 				document.getElementsByClassName("finger")[2].innerHTML = "SREDINEC";
-				beeplay().play("C5", 1/1);
+				//beeplay().play("C5", 1/1);
 				//snd_e.play();
 			}
 			else{
@@ -225,7 +232,7 @@ var updateGraph = function(emgData){
 			if(filter6/st>60 && filter0/st<60){
 				document.getElementsByClassName("finger")[1].innerHTML = "KAZALEC";
 				//snd_f.play();
-				beeplay().play("B4", 3/4);
+				//beeplay().play("B4", 3/4);
 			}
 			else{
 				document.getElementsByClassName("finger")[1].innerHTML = "";
@@ -246,8 +253,32 @@ var updateGraph = function(emgData){
 			filter7+=sum7;
    		}
 		emgGraphs[index].draw();
+		
 		//and draw positions:
-		draw_square(moving);
+		//draw_square(moving);
+		//console.log(notes[1]);
+		mov=mov+moving;
+		if(mov<=-3000){
+			$( '.key[ data-note=' + notes[posit] + ']' ).removeClass( 'move' );
+			posit=posit-1;
+			if(posit<0){
+				posit=0;
+			}
+			mov=0;
+			moving=0;
+			$( '.key[ data-note=' + notes[posit] + ']' ).addClass( 'move' );
+		}
+		else if(mov>=3000){
+			$( '.key[ data-note=' + notes[posit] + ']' ).removeClass( 'move' );
+			posit=posit+1;
+			if(posit>=notes.length){
+				posit=posit-1;
+			}
+			mov=0;
+			moving=0;
+			$( '.key[ data-note=' + notes[posit] + ']' ).addClass( 'move' );
+		}
+		console.log(notes[posit]);
 	})
 }
 
