@@ -1,11 +1,12 @@
 var notes = ['B','c','c#','d','d#','e','f','f#','g','g#','a','a#','b','C'];
-var keybind = ['a','A','S','D','R','F','T','G','H','U','J','I','K','O','L'];
+//var keybind = ['a','A','S','D','R','F','T','G','H','U','J','I','K','O','L'];
+var octave_def = 5;
+var octave = 5;
 
 $(function(){
   setup();
   
-  
-  $('input[type="radio"]').change(function(){
+  /*$('input[type="radio"]').change(function(){
     var checked = $('input[type="radio"]:checked').attr("id");
     
     if(checked == "showkeys") {
@@ -13,23 +14,21 @@ $(function(){
     } else {
       $("html").removeClass("keybind");
     }
-  });
+  });*/
   
-  
-  $(document).keydown(function(e){
+  /*$(document).keydown(function(e){
     var pressed = String.fromCharCode(e.which);
     
     if(keybind.indexOf(pressed) !== -1){
       var index = keybind.indexOf(pressed);
          
       $('.key[data-note="' + notes[index] + '"]').mousedown();
-      
-
+      $('.key[data-note="' + notes[index] + '"]').addClass("active");
       setTimeout(function(){
         $(".key").removeClass("active").unbind("mouseover");      
       }, 300);
     }
-  });
+  });*/
 
   $(".key").mousedown(function(){
     var $this = $(this);
@@ -52,26 +51,18 @@ $(function(){
 function setup() {
     $.each(notes, function(i, note){
       var octave = 5;
-      console.log('i');
-      console.log(i);
-      console.log('note');
-      console.log(note);
       if(note === "B"){
         var octave = octave - 1;
       }
       if(note === "C"){
         var octave = octave + 1;
       }
-    
-      var $key = $('<button class="key" data-bind="' + keybind[i] + '" data-note=' + note + ' data-octave=' + octave + '></button>');
-    
+      var $key = $('<button class="key" data-note=' + note + ' data-octave=' + octave + '></button>');
       $(".keyboard").append($key);
     });
 }
 
-
 function play($this, note, octave) {
-  console.log(note + octave);
   var play = beeplay().play(note + octave, 3/4);
 }
 

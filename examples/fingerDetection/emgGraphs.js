@@ -21,35 +21,24 @@ Myo.on('battery_level', function(val){
     console.log('Much power', val);
 });
 
+//Using gyroscope for detect moving
 Myo.on('gyroscope', function(data) {  
-    //console.log(data.x);
+    //ignorance minimal changes
     if(data.x>15 || data.x<-15){
     		moving=moving-(data.x);
     }
+    //ignorance abnormal changes. set min and max
     if(moving>9000){
     	moving=100;
     }
     else if(moving<-9000){
     	moving=-100;
     }
-    console.log(moving);
 });
 
 Myo.on('orientation', function(data) {  
     orientation=data;
 });
-
-//Drawing functions
-/*function draw_square(position) {
-	var canvas = document.getElementById('piano_canvas');
-  	var context = canvas.getContext('2d');
-  	context.clearRect(0, 0, canvas.width, canvas.height);//delete square
-  	context.beginPath();
-  	context.rect(position, 90, 10, 10);
-  	context.fillStyle = 'red';
-  	context.fill();
-  	context.stroke();
-}*/
 
 var rawData = [0,0,0,0,0,0,0,0];
 Myo.on('emg', function(data){
@@ -91,7 +80,7 @@ $(document).ready(function(){
 		}).data("plot");
 	});
 
-	//Minimalize graphs
+	//Minimalize graphs box
 	$("#min_button").click(function(){
 		console.log("min_button!!!!!!!!!");
     	if($(this).html() == "-"){
@@ -115,7 +104,7 @@ $(document).ready(function(){
     	$("#finger_box").slideToggle();
 	});
 
-	//Minimalize piano
+	//Minimalize piano box
 	$("#piano_button").click(function(){
 		console.log("piano_button!!!!!!!!!");
     	if($(this).html() == "-"){
@@ -195,10 +184,23 @@ var updateGraph = function(emgData){
    		}
    		st++;
    		if(st>100){//OK. We have 100 cycles sum positive samples -> Final value, tell me which finger is up (Filers is best result from my hand)
-			//console.log("0: " +filter0/st);
-			//console.log("7: " +filter7/st);
+			//set default octave
+			octave=octave_def;
+			$(".key").removeClass("active").unbind("mouseover"); //remove all active keys on piano
 			if(filter0/st>10 && filter0/st<60 && filter7/st<40 && filter3/st<300 && filter4/st<300 && filter6/st<30){
 				document.getElementsByClassName("finger")[3].innerHTML = "PRSTANEC";
+				//Left finger from middle finger - checking if out of piano
+				if(posit-1>=0){
+					if(notes[posit-1] === "B"){
+        				octave = octave_def - 1;
+      				}
+      				if(notes[posit-1] === "C"){
+        				octave = octave_def + 1;
+      				}
+      				//set key on active and play a note
+      				$('.key[data-note="' + notes[posit-1] + '"]').addClass("active");
+					beeplay().play(notes[posit-1]+octave, 3/4);
+				}
 				//snd_d.play();
 			}
 			else{
@@ -214,8 +216,15 @@ var updateGraph = function(emgData){
 			//console.log("3: " +filter3/st);
 			if(filter3/st>500){
 				document.getElementsByClassName("finger")[2].innerHTML = "SREDINEC";
-				//beeplay().play("C5", 1/1);
-				//snd_e.play();
+				if(notes[posit] === "B"){
+        			octave = octave_def - 1;
+      			}
+      			if(notes[posit] === "C"){
+        			octave = octave_def + 1;
+      			}
+      			//set key on active and play a note
+      			$('.key[data-note="' + notes[posit] + '"]').addClass("active");
+				beeplay().play(notes[posit]+octave, 3/4);
 			}
 			else{
 				document.getElementsByClassName("finger")[2].innerHTML = "";
@@ -223,7 +232,18 @@ var updateGraph = function(emgData){
 			//console.log("4: " +filter4/st);
 			if(filter4/st>400){
 				document.getElementsByClassName("finger")[4].innerHTML = "MEZINEC";
-				//snd_c.play();
+				//second left finger from middle finger - checking if out of piano
+				if(posit-2>=0){
+					if(notes[posit-2] === "B"){
+        				octave = octave_def - 1;
+      				}
+      				if(notes[posit-2] === "C"){
+        				octave = octave_def + 1;
+      				}
+      				//set key on active and play a note
+      				$('.key[data-note="' + notes[posit-2] + '"]').addClass("active");
+					beeplay().play(notes[posit-2]+octave, 3/4);
+				}
 			}
 			else{
 				document.getElementsByClassName("finger")[4].innerHTML = "";
@@ -231,8 +251,17 @@ var updateGraph = function(emgData){
 			//console.log("6: " +filter6/st);
 			if(filter6/st>60 && filter0/st<60){
 				document.getElementsByClassName("finger")[1].innerHTML = "KAZALEC";
-				//snd_f.play();
-				//beeplay().play("B4", 3/4);
+				if(posit+1<notes.length){
+					if(notes[posit+1] === "B"){
+        				octave = octave_def - 1;
+      				}
+      				else if(notes[posit+1] === "C"){
+        				octave = octave_def + 1;
+      				}
+      				//set key on active and play a note
+      				$('.key[data-note="' + notes[posit+1] + '"]').addClass("active");
+					beeplay().play(notes[posit+1]+octave, 3/4);
+				}
 			}
 			else{
 				document.getElementsByClassName("finger")[1].innerHTML = "";
@@ -254,31 +283,31 @@ var updateGraph = function(emgData){
    		}
 		emgGraphs[index].draw();
 		
-		//and draw positions:
-		//draw_square(moving);
-		//console.log(notes[1]);
+		//and draw positions of middle finger:
 		mov=mov+moving;
+		//if out of key (0 is center -3000 to 3000 is one key on keyboard) move position
 		if(mov<=-3000){
-			$( '.key[ data-note=' + notes[posit] + ']' ).removeClass( 'move' );
+			$('.key[ data-note=' + notes[posit] + ']').removeClass('move');
 			posit=posit-1;
+			//end of piano
 			if(posit<0){
 				posit=0;
 			}
 			mov=0;
 			moving=0;
-			$( '.key[ data-note=' + notes[posit] + ']' ).addClass( 'move' );
+			$( '.key[ data-note=' + notes[posit] + ']' ).addClass('move');
 		}
 		else if(mov>=3000){
-			$( '.key[ data-note=' + notes[posit] + ']' ).removeClass( 'move' );
+			$('.key[ data-note=' + notes[posit] + ']').removeClass('move');
 			posit=posit+1;
+			//end of piano
 			if(posit>=notes.length){
 				posit=posit-1;
 			}
 			mov=0;
 			moving=0;
-			$( '.key[ data-note=' + notes[posit] + ']' ).addClass( 'move' );
+			$('.key[ data-note=' + notes[posit] + ']').addClass('move');
 		}
-		console.log(notes[posit]);
 	})
 }
 

@@ -1,90 +1,3 @@
-/*@import url(http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300);
-* {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  box-sizing: border-box;
-}
-
-html, body {
-  height: 100%;
-}
-
-body {
-  font-family: "Open Sans Condensed";
-  -webkit-animation: bg 30s linear infinite;
-          animation: bg 30s linear infinite;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: column;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-      -ms-flex-align: center;
-          align-items: center;
-  background: #22475E;
-  padding: .25rem 1rem;
-}
-
-@-webkit-keyframes bg {
-  from, to {
-    background: #22475E;
-  }
-  33% {
-    background: #4C4A30;
-  }
-  66% {
-    background: #421D26;
-  }
-}
-
-@keyframes bg {
-  from, to {
-    background: #22475E;
-  }
-  33% {
-    background: #4C4A30;
-  }
-  66% {
-    background: #421D26;
-  }
-}
-menu {
-  margin-bottom: 4rem;
-}
-menu label {
-  display: inline-block;
-  font-size: 1.3rem;
-  padding: .5rem 1rem;
-  background: rgba(255, 255, 240, 0.3);
-  cursor: pointer;
-  -webkit-transition: .5s;
-  transition: .5s;
-}
-menu label:first-of-type {
-  border-radius: 5px 0 0 5px;
-}
-menu label:last-of-type {
-  border-radius: 0 5px 5px 0;
-}
-menu input {
-  display: none;
-}
-menu input:checked + label {
-  background: rgba(255, 255, 240, 0.9);
-  -webkit-transition: 0;
-  transition: 0;
-}
-*/
 .keyboard {
   width: 80rem;
   align: center;
@@ -108,6 +21,7 @@ menu input:checked + label {
   transition: 1s;
   color: rgba(255, 255, 255, 0.3);
 }
+
 .key:after {
   display: block;
   font-family: "Open Sans Condensed";
@@ -121,6 +35,7 @@ menu input:checked + label {
   right: 0;
   top: 100%;
 }
+
 .keybind .key:after {
   content: attr(data-bind);
 }
@@ -129,23 +44,14 @@ menu input:checked + label {
   -webkit-transition: .2s;
   transition: .2s;
 }
-/*
+
 .key.active {
-  -webkit-animation: blacks 300ms;
-          animation: blacks 300ms;
-}*/
+  background: #111;
+}
+
 .key:focus {
   outline: 0;
 }
-/*
-.key:first-child, .key:last-child {
-  opacity: 0;
-}
-
-.key:first-child.active, .key:last-child.active {
-  -webkit-animation: secrets 300ms;
-          animation: secrets 300ms;
-}*/
 
 [data-note*="#"] {
   position: absolute;
@@ -158,33 +64,21 @@ menu input:checked + label {
           transform: translateX(-50%) scale(0.6);
   border-radius: 0 0 8px 8px;
 }
+
 [data-note*="#"]:after {
   font-size: 2.5rem;
   top: inherit;
   bottom: 100%;
 }
+
 [data-note*="#"]:hover {
   background: #333333;
 }
-/*
+
 [data-note*="#"].active {
-  -webkit-animation: blacks 300ms;
-          animation: blacks 300ms;
-}*/
-/*
-@-webkit-keyframes secrets {
-  from {
-    opacity: .2;
-    background: #595959;
-  }
+  background: #FFF;
 }
 
-@keyframes secrets {
-  from {
-    opacity: .2;
-    background: #595959;
-  }
-}*/
 @-webkit-keyframes whites {
   from {
     background: #595959;
@@ -192,6 +86,7 @@ menu input:checked + label {
     text-shadow: 0 0 1rem, 0 0 2rem, 0 0 3rem;
   }
 }
+
 @keyframes whites {
   from {
     background: #595959;
@@ -199,6 +94,7 @@ menu input:checked + label {
     text-shadow: 0 0 1rem, 0 0 2rem, 0 0 3rem;
   }
 }
+
 @-webkit-keyframes blacks {
   from {
     background: #595959;
@@ -206,6 +102,7 @@ menu input:checked + label {
     text-shadow: 0 0 1rem, 0 0 2rem, 0 0 3rem;
   }
 }
+
 @keyframes blacks {
   from {
     background: #595959;
@@ -218,4 +115,8 @@ menu input:checked + label {
   background: #e6e6d8;
   -webkit-transition: .2s;
   transition: .2s;
+}
+
+[data-note*="#"].move {
+  background: #333333;
 }
