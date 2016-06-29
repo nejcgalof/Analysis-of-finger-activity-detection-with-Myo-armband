@@ -18,7 +18,7 @@ Myo.connect('com.myojs.fingers');
 
 //Other myo functions
 Myo.on('battery_level', function(val){
-    console.log('Much power', val);
+    console.log('POWER:', val);
 });
 
 //Using gyroscope for detect moving
@@ -43,7 +43,7 @@ Myo.on('orientation', function(data) {
 var rawData = [0,0,0,0,0,0,0,0];
 Myo.on('emg', function(data){
 	rawData = data;
-})
+});
 
 var range = 150;
 var resolution = 50;
@@ -82,19 +82,17 @@ $(document).ready(function(){
 
 	//Minimalize graphs box
 	$("#min_button").click(function(){
-		console.log("min_button!!!!!!!!!");
     	if($(this).html() == "-"){
         	$(this).html("+");
     	}
     	else{
         	$(this).html("-");
     	}
-    	$("#box").slideToggle();
+    	$("#graph_box").slideToggle();
 	});
 
 	//Minimalize finger box
 	$("#fin_button").click(function(){
-		console.log("fin_button!!!!!!!!!");
     	if($(this).html() == "-"){
         	$(this).html("+");
     	}
@@ -106,7 +104,6 @@ $(document).ready(function(){
 
 	//Minimalize piano box
 	$("#piano_button").click(function(){
-		console.log("piano_button!!!!!!!!!");
     	if($(this).html() == "-"){
         	$(this).html("+");
     	}
@@ -115,12 +112,44 @@ $(document).ready(function(){
     	}
     	$("#piano_box").slideToggle();
 	});
+
+	//Minimalize about box
+	$("#about_button").click(function(){
+    	if($(this).html() == "-"){
+        	$(this).html("+");
+    	}
+    	else{
+        	$(this).html("-");
+    	}
+    	$("#about_box").slideToggle();
+	});
+
+	//scrolling to content
+	$("#G").click(function() {
+		jQuery('html,body').animate({ scrollTop: $('.emgGraphs').offset().top}, 1000);
+		return false;
+    });
+
+    $("#P").click(function() {
+		jQuery('html,body').animate({ scrollTop: $('.piano').offset().top}, 1000);
+		return false;
+    });
+
+    $("#F").click(function() {
+		jQuery('html,body').animate({ scrollTop: $('.fingers').offset().top}, 1000);
+		return false;
+    });
+
+    $("#A").click(function() {
+		jQuery('html,body').animate({ scrollTop: $('.about').offset().top}, 1000);
+		return false;
+    });
 });
 
 var formatFlotData = function(data){
 		return [data.map(function(val, index){
-				return [index, val]
-			})]
+			return [index, val]
+		})]
 }
 
 var st=0;
@@ -137,16 +166,17 @@ var sum6=0;
 var sum7=0;
 
 //piano moving
-var posit=6;
+var posit=notes.length/2;
 var mov=0;
+
 var updateGraph = function(emgData){
 	graphData.map(function(data, index){
-		graphData[index] = graphData[index].slice(1);
-		graphData[index].push(emgData[index]);
+		graphData[index] = graphData[index].slice(1); //clean last data
+		graphData[index].push(emgData[index]); //add new data
 		emgGraphs[index].setData(formatFlotData(graphData[index]));
 		//We have data. What now? I try make own filter for each finger
 
-		//Each cycle, got 150 samples <- get sum of positive variables for each sensor
+		//Each cycle, got 50 samples <- get sum of positive variables for each sensor
 		sum0=0;
    		for(var i=0; i < graphData[0].length; i++) 
    		{ 
@@ -310,13 +340,3 @@ var updateGraph = function(emgData){
 		}
 	})
 }
-
-
-
-
-/*
-
-
-
-
-*/

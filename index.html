@@ -1,25 +1,32 @@
 <!-- AUTHOR: NEJC GALOF; galof.nejc@gmail.com -->
 <html>
 	<head>
+		<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 		<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.min.js"></script>
-
 		<script src='myo.js'></script>
 
 		<!--<script src='deviceGraphs.js'></script>-->
-		<script src='emgGraphs.js'></script>
 
 		<!--PIANO -->
 		<script src='piano.js'></script>
 		<link rel="stylesheet" type="text/css" href="piano.css" />
 		
-
+		<script src='emgGraphs.js'></script>
 		<link rel="icon" href="img/favicon.ico" type="image/x-icon" />
 		<link rel="stylesheet" type="text/css" href="style.css" />
 
-		<title>Finger detection (0.9)</title>
+		<title>Finger detection (0.11)</title>
 	</head>
 	<body>
+		<menu id="nav">
+    		<ul>
+        		<li><a href="" id="P">Piano</a></li>
+        		<li><a href="" id="F">Fingers</a></li>
+        		<li><a href="" id="G">Graphs</a></li>
+        		<li><a href="" id="A">About</a></li>
+    		</ul>
+		</menu>
 		<div class="piano">
 			<div id="title_bar">
 				<h2>Piano</h2>
@@ -48,7 +55,7 @@
 				<h2>Graphs</h2>
         		<div id="min_button">-</div>
     		</div>
-    		<div id="box">
+    		<div id="graph_box">
 				<div id='pod0' class='emgGraph'></div>
 				<div id='pod1' class='emgGraph'></div>
 				<div id='pod2' class='emgGraph'></div>
@@ -57,6 +64,15 @@
 				<div id='pod5' class='emgGraph'></div>
 				<div id='pod6' class='emgGraph'></div>
 				<div id='pod7' class='emgGraph'></div>
+			</div>
+		</div>
+		<div class='about'>
+			<div id="title_bar">
+				<h2>About</h2>
+        		<div id="about_button">-</div>
+    		</div>
+    		<div id="about_box">
+    			<h3>Created by Nejc Galof in Maribor, 2016</h3>
 			</div>
 		</div>
 	</body>

@@ -2,9 +2,7 @@
   width: 80rem;
   align: center;
   position: relative;
-  margin: 0;
-  padding: 0;
-  border: 0;
+  margin: 0 auto; 
 }
 
 .key {
@@ -39,6 +37,7 @@
 .keybind .key:after {
   content: attr(data-bind);
 }
+
 .key:hover {
   background: #e6e6d8;
   -webkit-transition: .2s;

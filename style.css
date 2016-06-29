@@ -1,8 +1,11 @@
-
 html, body{
 	width   : 100%;
 	margin  : 0;
 	padding : 0;
+}
+
+h2{
+	font-size   : 28px;
 }
 
 body{
@@ -11,9 +14,6 @@ body{
 	font-size   : 12px;
 	color       : #58bccc;
 	line-height : 20px;
-}
-
-body{
 	text-align : center;
 }
 
@@ -61,13 +61,24 @@ body{
     cursor:pointer;
 }
 
+#about_button{
+    border:solid 1px;
+    width: 25px;
+    height: 25px;
+    float:right;
+    cursor:pointer;
+}
 #title_bar{
     height: 30px;
     width: 100%;
 }
 
-#box{
-	padding : 25;
+#about_box{
+	padding : 45;
+}
+
+#graph_box{
+	padding : 45;
 }
 
 #finger_box{
@@ -79,13 +90,56 @@ body{
 }
 
 .fingers{
-	padding : 20;
+	padding : 10;
+	padding-top : 40;
 }
 
 .emgGraphs{
-	padding : 20;
+	padding : 10;
+	padding-top : 40;
 }
 
 .piano{
-	padding : 20;
+	padding : 10;
+	padding-top : 40;
+}
+
+.about{
+	padding : 10;
+	padding-top : 40;
+}
+
+#nav {
+	background-color: #58bccc;
+    top: 0px;
+    margin-top: -9px;
+    position: fixed;
+    width: 100%;
+    z-index: 1000; 
+}
+
+#nav ul {
+    list-style:none;
+    background-color: #58bccc;
+}
+
+#nav ul li {
+    display:inline-block;
+    line-height:24px;
+}
+
+#nav ul li a {
+    margin:100px;
+    color:#FFF;
+    padding:4px;
+    font-size:20px;
+    text-decoration:none;
+}
+
+#nav ul li a:hover {
+    border-bottom:3px #FFF solid;
+}
+
+#nav ul li .active {
+    border-bottom:3px #FFF solid;
 }
