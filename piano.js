@@ -1,6 +1,7 @@
 var notes = ['B','c','c#','d','d#','e','f','f#','g','g#','a','a#','b','C'];
 var octave_def = 5;
 var octave = 5;
+var tempo = 3/4;
 
 $(function(){
   setup();
@@ -25,7 +26,7 @@ $(function(){
 
 function setup() {
     $.each(notes, function(i, note){
-      var octave = 5;
+      var octave = octave_def;
       if(note === "B"){
         var octave = octave - 1;
       }
@@ -38,7 +39,33 @@ function setup() {
 }
 
 function play($this, note, octave) {
-  var play = beeplay().play(note + octave, 3/4);
+  var play = beeplay().play(note + octave, tempo);
+}
+
+//change octave
+function change_octave() {
+    var octave_set = document.getElementById("octave").value; //get new octave
+    var different=Math.abs(octave_def-octave_set); //see different between old and new
+    //change each one
+    if(octave_set>octave_def){ 
+      $( '.key' ).each(function( ) {
+        $(this).attr("data-octave",parseInt($(this).attr("data-octave"))+different);
+      });
+    }
+    else if(octave_set<octave_def){
+      $( '.key' ).each(function( ) {
+        $(this).attr("data-octave",parseInt($(this).attr("data-octave"))-different);
+      });
+    }
+    //set new octave
+    octave_def=octave_set;
+    octave=octave_set;
+}
+
+//change tempo
+function change_tempo() {
+  //get value and convert fraction to decimal 
+  tempo=eval($("#tempo").val());
 }
 
 /* beeplay.min.js --------- */

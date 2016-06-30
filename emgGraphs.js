@@ -214,10 +214,16 @@ var updateGraph = function(emgData){
    		}
    		st++;
    		if(st>100){//OK. We have 100 cycles sum positive samples -> Final value, tell me which finger is up (Filers is best result from my hand)
+			//dividing all filters - got average value from all cycles
+			filter0/=st;
+			filter3/=st;
+			filter4/=st;
+			filter6/=st;
+			filter7/=st;
 			//set default octave
 			octave=octave_def;
 			$(".key").removeClass("active").unbind("mouseover"); //remove all active keys on piano
-			if(filter0/st>10 && filter0/st<60 && filter7/st<40 && filter3/st<300 && filter4/st<300 && filter6/st<30){
+			if(filter0>10 && filter0<60 && filter7<40 && filter3<300 && filter4<300 && filter6<30){
 				document.getElementsByClassName("finger")[3].innerHTML = "PRSTANEC";
 				//Left finger from middle finger - checking if out of piano
 				if(posit-1>=0){
@@ -229,22 +235,20 @@ var updateGraph = function(emgData){
       				}
       				//set key on active and play a note
       				$('.key[data-note="' + notes[posit-1] + '"]').addClass("active");
-					beeplay().play(notes[posit-1]+octave, 3/4);
+					beeplay().play(notes[posit-1]+octave, tempo);
 				}
-				//snd_d.play();
 			}
 			else{
 				document.getElementsByClassName("finger")[3].innerHTML = "";
 			}
 			/*If we simulate for thumb too, but it's too hard
-			if(filter3/st<500 && filter0/st>50 && filter4/st<300){
+			if(filter3<500 && filter0>50 && filter4<300){
 				document.getElementsByClassName("finger")[0].innerHTML = "PALEC";
 			}
 			else{
 				document.getElementsByClassName("finger")[0].innerHTML = "";
 			}*/
-			//console.log("3: " +filter3/st);
-			if(filter3/st>500){
+			if(filter3>500){
 				document.getElementsByClassName("finger")[2].innerHTML = "SREDINEC";
 				if(notes[posit] === "B"){
         			octave = octave_def - 1;
@@ -254,13 +258,12 @@ var updateGraph = function(emgData){
       			}
       			//set key on active and play a note
       			$('.key[data-note="' + notes[posit] + '"]').addClass("active");
-				beeplay().play(notes[posit]+octave, 3/4);
+				beeplay().play(notes[posit]+octave, tempo);
 			}
 			else{
 				document.getElementsByClassName("finger")[2].innerHTML = "";
 			}
-			//console.log("4: " +filter4/st);
-			if(filter4/st>400){
+			if(filter4>400){
 				document.getElementsByClassName("finger")[4].innerHTML = "MEZINEC";
 				//second left finger from middle finger - checking if out of piano
 				if(posit-2>=0){
@@ -272,14 +275,13 @@ var updateGraph = function(emgData){
       				}
       				//set key on active and play a note
       				$('.key[data-note="' + notes[posit-2] + '"]').addClass("active");
-					beeplay().play(notes[posit-2]+octave, 3/4);
+					beeplay().play(notes[posit-2]+octave, tempo);
 				}
 			}
 			else{
 				document.getElementsByClassName("finger")[4].innerHTML = "";
 			}
-			//console.log("6: " +filter6/st);
-			if(filter6/st>60 && filter0/st<60){
+			if(filter6>60 && filter0<60){
 				document.getElementsByClassName("finger")[1].innerHTML = "KAZALEC";
 				if(posit+1<notes.length){
 					if(notes[posit+1] === "B"){
@@ -290,7 +292,7 @@ var updateGraph = function(emgData){
       				}
       				//set key on active and play a note
       				$('.key[data-note="' + notes[posit+1] + '"]').addClass("active");
-					beeplay().play(notes[posit+1]+octave, 3/4);
+					beeplay().play(notes[posit+1]+octave, tempo);
 				}
 			}
 			else{

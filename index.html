@@ -16,7 +16,7 @@
 		<link rel="icon" href="img/favicon.ico" type="image/x-icon" />
 		<link rel="stylesheet" type="text/css" href="style.css" />
 
-		<title>Finger detection (0.11)</title>
+		<title>Finger detection (0.12)</title>
 	</head>
 	<body>
 		<menu id="nav">
@@ -33,6 +33,33 @@
         		<div id="piano_button">-</div>
     		</div>
 			<div id="piano_box">
+				<div id="piano_settings">
+    				<h4>Octave:</h4>
+    				<div class="styled-select">
+    					<select id="octave" onchange="change_octave()">
+  							<option value="1">1</option>
+  							<option value="2">2</option>
+  							<option value="3">3</option>
+  							<option value="4">4</option>
+  							<option value="5" selected>5</option>
+  							<option value="6">6</option>
+  							<option value="7">7</option>
+  							<option value="8">8</option>
+						</select>
+					</div>
+					<h4>Tempo:</h4>
+					<div class="styled-select" onchange="change_tempo()">
+						<select id="tempo">
+  							<option value="1/1">1/1</option>
+  							<option value="1/2">1/2</option>
+  							<option value="1/4">1/4</option>
+  							<option value="3/4" selected>3/4</option>
+  							<option value="1/8">1/8</option>
+  							<option value="1/16">1/16</option>
+  							<option value="1/32">1/32</option>
+						</select>
+					</div>
+    			</div>
 				<div class="keyboard"></div>
 			</div>
 		</div>

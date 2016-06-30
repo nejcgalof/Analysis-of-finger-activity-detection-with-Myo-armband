@@ -8,6 +8,12 @@ h2{
 	font-size   : 28px;
 }
 
+h4{
+    display : inline-block;
+    font-size   : 16px;
+    padding-left: 50px;
+}
+
 body{
 	background  : #10161d url('img/dot_grid.png');
 	font-family : 'blender_prothin';
@@ -86,7 +92,13 @@ body{
 }
 
 #piano_box{
-	padding : 45;
+	padding-right:45;
+    padding-left:45;
+    padding-bottom: 45;
+}
+
+#piano_settings{
+    padding-bottom: 25;
 }
 
 .fingers{
@@ -142,4 +154,17 @@ body{
 
 #nav ul li .active {
     border-bottom:3px #FFF solid;
+}
+
+.styled-select select {
+    width: 70px;
+    padding: 5px;
+    font-size: 16px;
+    line-height: 1;
+    border: 2;
+    border-radius: 0;
+}
+
+.styled-select{
+    display : inline-block;
 }
