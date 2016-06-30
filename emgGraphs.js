@@ -164,6 +164,12 @@ var sum3=0;
 var sum4=0;
 var sum6=0;
 var sum7=0;
+//only one note in one press 
+//var finger1_sound=false; //not have thumb
+var finger2_sound=false;
+var finger3_sound=false;
+var finger4_sound=false;
+var finger5_sound=false;
 
 //piano moving
 var posit=notes.length/2;
@@ -235,11 +241,16 @@ var updateGraph = function(emgData){
       				}
       				//set key on active and play a note
       				$('.key[data-note="' + notes[posit-1] + '"]').addClass("active");
-					beeplay().play(notes[posit-1]+octave, tempo);
+      				//only first time play sound
+      				if(!finger4_sound){
+						beeplay().play(notes[posit-1]+octave, tempo);
+						finger4_sound=true;
+					}
 				}
 			}
 			else{
 				document.getElementsByClassName("finger")[3].innerHTML = "";
+				finger4_sound=false; //reset
 			}
 			/*If we simulate for thumb too, but it's too hard
 			if(filter3<500 && filter0>50 && filter4<300){
@@ -258,10 +269,15 @@ var updateGraph = function(emgData){
       			}
       			//set key on active and play a note
       			$('.key[data-note="' + notes[posit] + '"]').addClass("active");
-				beeplay().play(notes[posit]+octave, tempo);
+      			//only first time play sound
+      			if(!finger3_sound){
+					beeplay().play(notes[posit]+octave, tempo);
+					finger3_sound=true;
+				}
 			}
 			else{
 				document.getElementsByClassName("finger")[2].innerHTML = "";
+				finger3_sound=false; //reset
 			}
 			if(filter4>400){
 				document.getElementsByClassName("finger")[4].innerHTML = "MEZINEC";
@@ -275,11 +291,16 @@ var updateGraph = function(emgData){
       				}
       				//set key on active and play a note
       				$('.key[data-note="' + notes[posit-2] + '"]').addClass("active");
-					beeplay().play(notes[posit-2]+octave, tempo);
+      				//only first time play sound
+      				if(!finger5_sound){
+						beeplay().play(notes[posit-2]+octave, tempo);
+						finger5_sound=true;
+					}
 				}
 			}
 			else{
 				document.getElementsByClassName("finger")[4].innerHTML = "";
+				finger5_sound=false; //reset
 			}
 			if(filter6>60 && filter0<60){
 				document.getElementsByClassName("finger")[1].innerHTML = "KAZALEC";
@@ -292,11 +313,16 @@ var updateGraph = function(emgData){
       				}
       				//set key on active and play a note
       				$('.key[data-note="' + notes[posit+1] + '"]').addClass("active");
-					beeplay().play(notes[posit+1]+octave, tempo);
+      				//only first time play sound
+      				if(!finger2_sound){
+						beeplay().play(notes[posit+1]+octave, tempo);
+						finger2_sound=true;
+					}
 				}
 			}
 			else{
 				document.getElementsByClassName("finger")[1].innerHTML = "";
+				finger2_sound=false;
 			}
 			//reset variables
 			st=0;
@@ -328,6 +354,12 @@ var updateGraph = function(emgData){
 			mov=0;
 			moving=0;
 			$( '.key[ data-note=' + notes[posit] + ']' ).addClass('move');
+
+			//all keys can play again-because tap on different keys
+			finger2_sound=false;
+			finger3_sound=false;
+			finger4_sound=false;
+			finger5_sound=false;
 		}
 		else if(mov>=3000){
 			$('.key[ data-note=' + notes[posit] + ']').removeClass('move');
@@ -339,6 +371,12 @@ var updateGraph = function(emgData){
 			mov=0;
 			moving=0;
 			$('.key[ data-note=' + notes[posit] + ']').addClass('move');
+
+			//all keys can play again-because tap on different keys
+			finger2_sound=false;
+			finger3_sound=false;
+			finger4_sound=false;
+			finger5_sound=false;
 		}
 	})
 }
