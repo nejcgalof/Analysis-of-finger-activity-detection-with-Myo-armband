@@ -1,13 +1,18 @@
 // AUTHOR: NEJC GALOF; galof.nejc@gmail.com
 //This tells Myo.js to create the web sockets needed to communnicate with Myo Connect
 
-//sample for moving
-var moving=0;
-var orientation=0;
+//Measurement
+var measurement=0;
+var number_measurement=0;
 
+//Sample for moving
+var orientation=0;
+var prev_orientation=0;
+
+//When Myo is connected
 Myo.on('connected', function(){
 	console.log('connected');
-	this.streamEMG(true);
+	this.streamEMG(true); //turn stream EMG on
 
 	setInterval(function(){
 		updateGraph(rawData);
@@ -21,34 +26,79 @@ Myo.on('battery_level', function(val){
     console.log('POWER:', val);
 });
 
-//Using gyroscope for detect moving
-Myo.on('gyroscope', function(data) {  
-    //ignorance minimal changes
-    if(data.x>15 || data.x<-15){
-    		moving=moving-(data.x);
-    }
-    //ignorance abnormal changes. set min and max
-    if(moving>9000){
-    	moving=100;
-    }
-    else if(moving<-9000){
-    	moving=-100;
-    }
-});
-
+//Moving hand (looking only yaw)
+var center_orientation=true;
+var euler = new THREE.Euler();
+var quaternion = new THREE.Quaternion();
 Myo.on('orientation', function(data) {  
-    orientation=data;
+	if(center_orientation){ //first time setting orientation to zero (0,0,0,1)
+		this.zeroOrientation();
+		center_orientation=false;
+	}
+    quaternion.set(data.x,data.y,data.z,data.w);
+    euler.setFromQuaternion(quaternion); //get euler angles
+    orientation=THREE.Math.radToDeg(euler.z); //get angles from rad to deg
 });
 
+//Measurement export
+var sensor1=[['sensor1']];
+var sensor2=[['sensor2']];
+var sensor3=[['sensor3']];
+var sensor4=[['sensor4']];
+var sensor5=[['sensor5']];
+var sensor6=[['sensor6']];
+var sensor7=[['sensor7']];
+var sensor8=[['sensor8']];
+var csvRows = [];
+
+//EMG raw data
 var rawData = [0,0,0,0,0,0,0,0];
+
 Myo.on('emg', function(data){
 	rawData = data;
+
+	if(measurement==1){ //We measurement 3 second and export csv file
+		sensor1.push([rawData[0]]);
+		sensor2.push([rawData[1]]);
+		sensor3.push([rawData[2]]);
+		sensor4.push([rawData[3]]);
+		sensor5.push([rawData[4]]);
+		sensor6.push([rawData[5]]);
+		sensor7.push([rawData[6]]);
+		sensor8.push([rawData[7]]);
+
+		number_measurement++;
+		if(number_measurement==600){//end of measurement
+			console.timeEnd('measurement');
+			measurement=0;
+			number_measurement=0;
+			for(var i=0, l=sensor1.length; i<l; ++i){
+    			csvRows.push(sensor1[i].join(';'));
+			}
+			for (var i = 0, l = csvRows.length; i < l; ++i) {
+ 				csvRows[i] += ";"+sensor2[i];
+ 				csvRows[i] += ";"+sensor3[i];
+ 				csvRows[i] += ";"+sensor4[i];
+ 				csvRows[i] += ";"+sensor5[i];
+ 				csvRows[i] += ";"+sensor6[i];
+ 				csvRows[i] += ";"+sensor7[i];
+ 				csvRows[i] += ";"+sensor8[i];
+			}
+			var csvString = csvRows.join("%0A");
+			var a         = document.createElement('a');
+			a.href        = 'data:attachment/csv,' + csvString;
+			a.target      = '_blank';
+			a.download    = 'EMG_values_on_3_SEC.csv';
+			document.body.appendChild(a);
+			a.click();
+		}
+	}
 });
 
+//For graphs
 var range = 150;
 var resolution = 50;
 var emgGraphs;
-
 var graphData= [
 	Array.apply(null, Array(resolution)).map(Number.prototype.valueOf,0),
 	Array.apply(null, Array(resolution)).map(Number.prototype.valueOf,0),
@@ -164,16 +214,17 @@ var sum3=0;
 var sum4=0;
 var sum6=0;
 var sum7=0;
-//only one note in one press 
+
+//Only one note in one press 
 //var finger1_sound=false; //not have thumb
 var finger2_sound=false;
 var finger3_sound=false;
 var finger4_sound=false;
 var finger5_sound=false;
 
-//piano moving
+//Piano moving
 var posit=notes.length/2;
-var mov=0;
+
 
 var updateGraph = function(emgData){
 	graphData.map(function(data, index){
@@ -220,13 +271,13 @@ var updateGraph = function(emgData){
    		}
    		st++;
    		if(st>100){//OK. We have 100 cycles sum positive samples -> Final value, tell me which finger is up (Filers is best result from my hand)
-			//dividing all filters - got average value from all cycles
+			//Dividing all filters - got average value from all cycles
 			filter0/=st;
 			filter3/=st;
 			filter4/=st;
 			filter6/=st;
 			filter7/=st;
-			//set default octave
+			//Set default octave
 			octave=octave_def;
 			$(".key").removeClass("active").unbind("mouseover"); //remove all active keys on piano
 			if(filter0>10 && filter0<60 && filter7<40 && filter3<300 && filter4<300 && filter6<30){
@@ -239,7 +290,7 @@ var updateGraph = function(emgData){
       				if(notes[posit-1] === "C"){
         				octave = octave_def + 1;
       				}
-      				//set key on active and play a note
+      				//Set key on active and play a note
       				$('.key[data-note="' + notes[posit-1] + '"]').addClass("active");
       				//only first time play sound
       				if(!finger4_sound){
@@ -267,9 +318,9 @@ var updateGraph = function(emgData){
       			if(notes[posit] === "C"){
         			octave = octave_def + 1;
       			}
-      			//set key on active and play a note
+      			//Set key on active and play a note
       			$('.key[data-note="' + notes[posit] + '"]').addClass("active");
-      			//only first time play sound
+      			//Only first time play sound
       			if(!finger3_sound){
 					beeplay().play(notes[posit]+octave, tempo);
 					finger3_sound=true;
@@ -281,7 +332,7 @@ var updateGraph = function(emgData){
 			}
 			if(filter4>400){
 				document.getElementsByClassName("finger")[4].innerHTML = "MEZINEC";
-				//second left finger from middle finger - checking if out of piano
+				//Second left finger from middle finger - checking if out of piano
 				if(posit-2>=0){
 					if(notes[posit-2] === "B"){
         				octave = octave_def - 1;
@@ -289,9 +340,9 @@ var updateGraph = function(emgData){
       				if(notes[posit-2] === "C"){
         				octave = octave_def + 1;
       				}
-      				//set key on active and play a note
+      				//Set key on active and play a note
       				$('.key[data-note="' + notes[posit-2] + '"]').addClass("active");
-      				//only first time play sound
+      				//Only first time play sound
       				if(!finger5_sound){
 						beeplay().play(notes[posit-2]+octave, tempo);
 						finger5_sound=true;
@@ -311,9 +362,9 @@ var updateGraph = function(emgData){
       				else if(notes[posit+1] === "C"){
         				octave = octave_def + 1;
       				}
-      				//set key on active and play a note
+      				//Set key on active and play a note
       				$('.key[data-note="' + notes[posit+1] + '"]').addClass("active");
-      				//only first time play sound
+      				//Only first time play sound
       				if(!finger2_sound){
 						beeplay().play(notes[posit+1]+octave, tempo);
 						finger2_sound=true;
@@ -324,7 +375,7 @@ var updateGraph = function(emgData){
 				document.getElementsByClassName("finger")[1].innerHTML = "";
 				finger2_sound=false;
 			}
-			//reset variables
+			//Reset variables
 			st=0;
 			filter0=0;
 			filter3=0;
@@ -341,38 +392,35 @@ var updateGraph = function(emgData){
    		}
 		emgGraphs[index].draw();
 		
-		//and draw positions of middle finger:
-		mov=mov+moving;
-		//if out of key (0 is center -3000 to 3000 is one key on keyboard) move position
-		if(mov<=-3000){
+		//And draw positions of middle finger:
+		//We turn hand 45deg right and 45deg to left. We change in 90deg 14 keys.
+		if(orientation>(prev_orientation+(90/14))){
+			prev_orientation=orientation;
 			$('.key[ data-note=' + notes[posit] + ']').removeClass('move');
 			posit=posit-1;
-			//end of piano
+			//End of piano
 			if(posit<0){
 				posit=0;
 			}
-			mov=0;
-			moving=0;
 			$( '.key[ data-note=' + notes[posit] + ']' ).addClass('move');
 
-			//all keys can play again-because tap on different keys
+			//All keys can play again-because tap on different keys
 			finger2_sound=false;
 			finger3_sound=false;
 			finger4_sound=false;
 			finger5_sound=false;
 		}
-		else if(mov>=3000){
+		else if(orientation<(prev_orientation-(90/14))){
+			prev_orientation=orientation;
 			$('.key[ data-note=' + notes[posit] + ']').removeClass('move');
 			posit=posit+1;
-			//end of piano
+			//End of piano
 			if(posit>=notes.length){
 				posit=posit-1;
 			}
-			mov=0;
-			moving=0;
 			$('.key[ data-note=' + notes[posit] + ']').addClass('move');
 
-			//all keys can play again-because tap on different keys
+			//All keys can play again-because tap on different keys
 			finger2_sound=false;
 			finger3_sound=false;
 			finger4_sound=false;
@@ -380,3 +428,13 @@ var updateGraph = function(emgData){
 		}
 	})
 }
+
+//Measurement
+$(document).keydown(function(e){
+    var pressed = String.fromCharCode(e.which);
+    if(pressed=='M' && measurement==0){
+    	console.log('measurement');
+    	measurement=1;
+    	console.time('measurement');
+    }
+});

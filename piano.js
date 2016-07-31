@@ -1,3 +1,4 @@
+// AUTHOR: NEJC GALOF; galof.nejc@gmail.com
 var notes = ['B','c','c#','d','d#','e','f','f#','g','g#','a','a#','b','C'];
 var octave_def = 5;
 var octave = 5;
