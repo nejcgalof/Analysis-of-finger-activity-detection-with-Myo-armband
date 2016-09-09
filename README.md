@@ -7,4 +7,4 @@ We analyse the feasibility of finger activity detection by the Myo armband. The 
 
 Open this [page](https://nejcgalof.github.io/Analysis-of-finger-activity-detection-with-Myo-armband-/), put Myo on left forearm and connect armband with computer. (Note: this parameters work good for me, you must change some parameters).
 
-In the future: create more effective way for detection finger. (Maybe support vector machine).
+In the future: Create more effective way for detection fingers. (Maybe support vector machine).
